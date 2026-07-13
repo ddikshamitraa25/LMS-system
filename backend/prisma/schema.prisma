@@ -35,6 +35,9 @@ model User {
 
   courses     Course[]     @relation("InstructorCourses")
   enrollments Enrollment[]
+
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Course {
@@ -61,6 +64,11 @@ model Course {
   lessons     Lesson[]
   enrollments Enrollment[]
   learningPaths LearningPath[] @relation("LearningPathCourses")
+
+  @@index([status])
+  @@index([category])
+  @@index([createdAt])
+  @@index([instructorId])
 }
 
 model LearningPath {
@@ -87,6 +95,9 @@ model Lesson {
   updatedAt DateTime @updatedAt
 
   completedBy Enrollment[] @relation("CompletedLessons")
+
+  @@index([courseId])
+  @@index([createdAt])
 }
 
 model Enrollment {
@@ -104,6 +115,10 @@ model Enrollment {
   course           Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   completedLessons Lesson[] @relation("CompletedLessons")
 
-  @@unique([userId, courseId]) // Prevent duplicate enrollments
-   @@index([createdAt]) //for weekly stats performance
+  @@unique([userId, courseId])
+
+  @@index([userId])
+  @@index([courseId])
+  @@index([status])
+  @@index([createdAt])
 }
